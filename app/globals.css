@@ -72,7 +72,9 @@ body,
     --ring: 24 5.7% 82.9%;
   }
 }
- 
+ .transition-opacity{
+  display:none
+ }
 @layer base {
   * {
     @apply border-border;
