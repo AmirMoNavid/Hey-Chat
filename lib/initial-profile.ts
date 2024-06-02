@@ -8,38 +8,35 @@ import db from '@/lib/db';
  * It handles almost all the edge cases
  * @returns Profile object
  */
+import db  from "@/lib/db";
+
+import { currentUser } from "@clerk/nextjs/server";
+
 export const initialProfile = async () => {
-  // get current logged in user
   const user = await currentUser();
 
-  // if no user is logged in, redirect user to the Sign In screen
-  if (!user) return redirectToSignIn();
-
-  // if the user is loggedin
-  // check if the loggwed in user is present or not
-  // 1. Check if the logged in user is present in the db or not
+  const username =
+    user?.username.charAt(0).toUpperCase() + user?.username.slice(1);
+  if (!user) {
+    return null;
+  }
   const profile = await db.profile.findUnique({
     where: {
       userId: user.id,
-    }
-  })
-
-  // if profile present in db or logged in user present in db
+    },
+  });
   if (profile) {
-    return profile
+    return profile;
   }
-
-  // if profile is not present in db, create a new entry in db
 
   const newProfile = await db.profile.create({
     data: {
       userId: user.id,
-      name: `${user.firstName} ${user.lastName}`,
+      name: username,
       imageUrl: user.imageUrl,
-      email: user.emailAddresses[0].emailAddress
-    }
-  })
-
+      email: user.emailAddresses[0].emailAddress,
+    },
+  });
 
   return newProfile;
-}
+};
