@@ -8,9 +8,7 @@ import db from '@/lib/db';
  * It handles almost all the edge cases
  * @returns Profile object
  */
-import db  from "@/lib/db";
 
-import { currentUser } from "@clerk/nextjs/server";
 
 export const initialProfile = async () => {
   const user = await currentUser();
